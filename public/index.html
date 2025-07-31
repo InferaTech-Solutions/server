@@ -90,6 +90,9 @@
       const socket = io();
       let ledState = false;
 
+      const button = document.getElementById("ledButton");
+      const led = document.getElementById("ledIndicator");
+
       socket.on("connect", () => {
         console.log("Browser connected to server");
         document.getElementById("espStatus").innerText = "Connected";
@@ -98,9 +101,6 @@
       socket.on("esp-message", (msg) => {
         console.log("ESP message:", msg);
         document.getElementById("espStatus").innerText = msg;
-        console.log("msg type" + msg)
-        const button = document.getElementById("ledButton");
-        const led = document.getElementById("ledIndicator");
 
         if (msg === "LED_ON") {
           button.innerText = "ON";
@@ -110,23 +110,18 @@
           button.innerText = "OFF";
           led.classList.remove("on");
           ledState = false;
+        } else {
+          console.warn("Unknown ESP message:", msg);
         }
       });
 
       function toggleLED() {
-        ledState = !ledState;
-        const button = document.getElementById("ledButton");
-        const led = document.getElementById("ledIndicator");
-
         if (ledState) {
-          button.innerText = "ON";
-          led.classList.add("on");
-          socket.emit("web-command", "LED_ON");
-        } else {
-          button.innerText = "OFF";
-          led.classList.remove("on");
           socket.emit("web-command", "LED_OFF");
+        } else {
+          socket.emit("web-command", "LED_ON");
         }
+        // Do NOT change UI here — wait for ESP to confirm the state
       }
     </script>
   </body>
