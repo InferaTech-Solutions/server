@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ESP Control Panel</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h2>ESP Web Control Panel</h2>
+
+  <button onclick="sendCommand('LED_ON')">Turn ON LED</button>
+  <button onclick="sendCommand('LED_OFF')">Turn OFF LED</button>
+
+  <p id="status">ESP Status: <span id="espStatus">Disconnected</span></p>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    socket.on("connect", () => {
+      console.log("Browser connected to server");
+    });
+
+    socket.on("esp-message", (msg) => {
+      document.getElementById("espStatus").innerText = msg;
+    });
+
+    function sendCommand(cmd) {
+      socket.emit("web-command", cmd);
+    }
+  </script>
+</body>
+</html>
