@@ -103,10 +103,10 @@
         const led = document.getElementById("ledIndicator");
 
         if (msg === "LED_ON") {
-          button.innerText = "Command executed: LED_ON";
+          button.innerText = "ON";
           led.classList.add("on");
           ledState = true;
-        } else if (msg === "Command executed: LED_OFF") {
+        } else if (msg === "LED_OFF") {
           button.innerText = "OFF";
           led.classList.remove("on");
           ledState = false;
