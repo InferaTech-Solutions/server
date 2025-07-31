@@ -98,15 +98,15 @@
       socket.on("esp-message", (msg) => {
         console.log("ESP message:", msg);
         document.getElementById("espStatus").innerText = msg;
-
+        console.log("msg type" + msg)
         const button = document.getElementById("ledButton");
         const led = document.getElementById("ledIndicator");
 
         if (msg === "LED_ON") {
-          button.innerText = "ON";
+          button.innerText = "Command executed: LED_ON";
           led.classList.add("on");
           ledState = true;
-        } else if (msg === "LED_OFF") {
+        } else if (msg === "Command executed: LED_OFF") {
           button.innerText = "OFF";
           led.classList.remove("on");
           ledState = false;
