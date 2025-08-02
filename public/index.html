@@ -1,128 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>ESP Control Panel</title>
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <style>
-      body {
-        background-color: #1e1e1e;
-        color: #ccc;
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding-top: 50px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ESP8266 Controller</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
 
-      .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 40px;
-        flex-wrap: wrap;
-      }
+    h1 {
+      margin-bottom: 2rem;
+    }
 
-      .led {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        border: 2px solid #444;
-        background-color: #1e1e1e;
-        box-shadow: inset 0 0 10px #000;
-        margin: 10px auto;
-      }
+    .link-button {
+      text-decoration: none;
+      background-color: #007bff;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin: 0.5rem;
+      transition: background-color 0.2s ease;
+    }
 
-      .led.on {
-        background-color: #00ff55;
-        box-shadow: 0 0 20px #00ff55;
-      }
-
-      .button {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        border: 2px solid #00c896;
-        background-color: transparent;
-        color: #00c896;
-        font-size: 24px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      .button:hover {
-        background-color: #00c89622;
-      }
-
-      h2 {
-        color: #fff;
-      }
-
-      .label {
-        font-size: 14px;
-        margin-bottom: 10px;
-        color: #999;
-      }
-
-      #status {
-        margin-top: 30px;
-        font-size: 16px;
-      }
-    </style>
-  </head>
-  <body>
-    <h2>ESP Web Control Panel</h2>
-
-    <div class="container">
-      <div>
-        <div class="label">LED</div>
-        <div id="ledIndicator" class="led"></div>
-      </div>
-
-      <div>
-        <div class="label">BUTTON</div>
-        <button id="ledButton" class="button" onclick="toggleLED()">OFF</button>
-      </div>
-    </div>
-
-    <p id="status">ESP Status: <span id="espStatus">Disconnected</span></p>
-
-    <script>
-      const socket = io();
-      let ledState = false;
-
-      const button = document.getElementById("ledButton");
-      const led = document.getElementById("ledIndicator");
-
-      socket.on("connect", () => {
-        console.log("Browser connected to server");
-        document.getElementById("espStatus").innerText = "Connected";
-      });
-
-      socket.on("esp-message", (msg) => {
-        console.log("ESP message:", msg);
-        document.getElementById("espStatus").innerText = msg;
-
-        if (msg === "LED_ON") {
-          button.innerText = "ON";
-          led.classList.add("on");
-          ledState = true;
-        } else if (msg === "LED_OFF") {
-          button.innerText = "OFF";
-          led.classList.remove("on");
-          ledState = false;
-        } else {
-          console.warn("Unknown ESP message:", msg);
-        }
-      });
-
-      function toggleLED() {
-        if (ledState) {
-          socket.emit("web-command", "LED_OFF");
-        } else {
-          socket.emit("web-command", "LED_ON");
-        }
-        // Do NOT change UI here — wait for ESP to confirm the state
-      }
-    </script>
-  </body>
+    .link-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>ESP8266 Controller</h1>
+  <a href="/slider.html" class="link-button">Slider Control</a>
+  <a href="/button.html" class="link-button">Button Control</a>
+</body>
 </html>

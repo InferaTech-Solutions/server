@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LED Brightness Slider</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .value-display {
+      font-size: 1.2rem;
+      margin-top: 0.75rem;
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    .percent {
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>LED Brightness Control</h1>
+    <input type="range" min="0" max="1023" id="slider" />
+    <div class="value-display">
+      PWM: <span id="pwmValue">0</span><br>
+      <span class="percent">Brightness: <span id="percent">0%</span></span>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+    const slider = document.getElementById("slider");
+    const pwmDisplay = document.getElementById("pwmValue");
+    const percentDisplay = document.getElementById("percent");
+
+    slider.addEventListener("input", () => {
+      const raw = parseInt(slider.value); // 0 to 1023
+      const gamma = 1.6;
+
+      const normalized = raw / 1023;
+      const corrected = Math.pow(normalized, gamma);
+      const pwmValue = Math.round(corrected * 1023);
+
+      pwmDisplay.textContent = pwmValue;
+      percentDisplay.textContent = `${Math.round((pwmValue / 1023) * 100)}%`;
+
+      socket.emit("web-command", pwmValue);
+    });
+  </script>
+</body>
+</html>
